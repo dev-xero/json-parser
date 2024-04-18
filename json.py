@@ -1,17 +1,18 @@
 from lexer import Lexer
-from pathlib import Path
+
 
 def read_file(path: str):
-    '''
+    """
         Reads the contents of the file specified by the path.
         - path: string file path
-    '''
+    """
     output = ''
 
     try:
         with open(path) as file:
             output = file.read()
-    except:
+
+    except FileNotFoundError:
         print("Failed to read json file.")
         exit(1)
 
@@ -19,7 +20,9 @@ def read_file(path: str):
 
 
 def main():
-    '''Main program entry point.'''
+    """
+        Main program entry point.
+    """
     path = input("> JSON File: ")
 
     if path == '':
@@ -27,13 +30,16 @@ def main():
         exit(1)
 
     file = read_file(path)
-    
+
     if file == '':
         print("Failed to read json file.")
         exit(1)
 
+    # Generates tokens from the source file
     lexer = Lexer(file)
-    lexer.print_source()
+
+    lexer.scan()
+    lexer.print_tokens()
 
 
 if __name__ == "__main__":
