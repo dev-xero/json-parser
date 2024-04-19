@@ -26,6 +26,7 @@ class Lexer:
         for i in range(len(self.source)):
             self.current = i
             self.start = self.current
+            
             match self.source[i]:
                 case '{':
                     self.tokens.append(Token(TokenType.LEFT_BRACE, None))
@@ -38,6 +39,9 @@ class Lexer:
 
                 case ',':
                     self.tokens.append(Token(TokenType.COMMA, None))
+
+                case ' ' | '\n' | '\t':
+                    pass
 
                 case '"':
                     if self.look_ahead().isalnum():
@@ -58,7 +62,10 @@ class Lexer:
                         pass
 
                 case _:
-                    pass
+                    current = self.source[i]
+                    if not current.isalnum():
+                        print("Unexpected token '{}' encountered.".format(current))
+                        exit(1)
 
         return self.tokens
 
