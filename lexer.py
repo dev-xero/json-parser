@@ -42,6 +42,10 @@ class Lexer:
                 case '"':
                     if self.look_ahead().isalnum():
                         while not self.is_end() and self.current < (len(self.source)-1) and self.look_ahead() != '"':
+                            if self.current+2 >= len(self.source):
+                                print("Unterminated string literal.")
+                                exit(1)
+
                             i += 1
                             if self.current+1 >= len(self.source):
                                 break
