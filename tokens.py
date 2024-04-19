@@ -1,9 +1,12 @@
-from enum import Enum
+from enum import Enum, auto
 
 
 class TokenType(Enum):
-    LEFT_BRACE = '{'
-    RIGHT_BRACE = '}'
+    LEFT_BRACE = auto()
+    RIGHT_BRACE = auto()
+    COLON = auto()
+    COMMA = auto()
+    STRING = auto()
 
 
 class Token:
