@@ -1,0 +1,10 @@
+{
+    "stage": "5",
+    "goal": {
+        "this": "objects",
+        "more": "objects"
+    },
+    "working": true,
+    "errors": null,
+    "missing": false
+}

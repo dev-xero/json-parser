@@ -8,6 +8,8 @@ class TokenType(Enum):
     COMMA = auto()
     STRING = auto()
     NUMBER = auto()
+    NULL = auto()
+    BOOLEAN = auto()
 
 
 class Token:

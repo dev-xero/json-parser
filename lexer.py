@@ -68,7 +68,7 @@ class Lexer:
                         pass
 
                 case _:
-                    # Check if this lexeme is a digit
+                    # Check if this lexeme is a digit, then a potential number
                     current = self.source[self.current]
                     if current.isdigit():
                         while (self.current < len(self.source)) and self.look_ahead().isdigit():
@@ -77,15 +77,36 @@ class Lexer:
 
                             self.current += 1
 
-                        number = self.source[self.start:self.current+1]                        
+                        number = self.source[self.start:self.current+1]
                         self.tokens.append(Token(TokenType.NUMBER, number))
 
+                    # Check if this lexeme is a special identifier
+                    # null, true, false
+                    elif current.isalnum():
+                        if self.current + 5 < len(self.source):
+                            identifier = self.source[self.current:self.current+4]
+
+                            # If this identifier is either true or null, append appropriately
+                            if identifier in ['true', 'null']:
+                                if identifier == 'true':
+                                    self.tokens.append(
+                                        Token(TokenType.BOOLEAN, identifier))
+                                else:
+                                    self.tokens.append(
+                                        Token(TokenType.NULL, identifier))
+
+                            # If scanning the next lexeme will give 'false', append as a boolean
+                            elif identifier == 'fals':
+                                if self.source[self.current:self.current+5] == 'false':
+                                    self.tokens.append(
+                                        Token(TokenType.BOOLEAN, 'false'))
+
                     # Default case, exit on encountering an undefined lexeme
-                    elif not current.isalnum():
+                    else:
                         print(
                             f"[Line {self.line}] Unexpected token '{current}' encountered.")
                         exit(1)
-                
+
             self.current += 1
 
         return self.tokens
