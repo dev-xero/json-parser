@@ -7,12 +7,13 @@ class Lexer:
     """
 
     # Lexer state
-    start, current, line = 0, 0, 0
+    start, current, line = 0, 0, 1
 
     # Instantiates a new lexer
     def __init__(self, source: str):
         self.source = source
         self.tokens: [Token] = []
+        self.scanning = False
 
     # Prints source content
     def print_source(self):
@@ -24,11 +25,12 @@ class Lexer:
 
     # Scans the source content and produces json tokens
     def scan(self) -> [Token]:
-        for i in range(len(self.source)):
-            self.current = i
+        self.scanning = True
+
+        while self.current < len(self.source):
             self.start = self.current
 
-            match self.source[i]:
+            match self.source[self.current]:
                 case '{':
                     self.tokens.append(Token(TokenType.LEFT_BRACE, None))
 
@@ -42,7 +44,7 @@ class Lexer:
                     self.tokens.append(Token(TokenType.COMMA, None))
 
                 case ' ' | '\n' | '\t':
-                    if self.source[i] == '\n':
+                    if self.source[self.current] == '\n':
                         self.line += 1
 
                 case '"':
@@ -53,8 +55,6 @@ class Lexer:
                                 print(
                                     f"[Line {self.line}] Unterminated string literal.")
                                 exit(1)
-
-                            i += 1
 
                             if self.current+1 >= len(self.source):
                                 break
@@ -68,16 +68,32 @@ class Lexer:
                         pass
 
                 case _:
+                    # Check if this lexeme is a digit
+                    current = self.source[self.current]
+                    if current.isdigit():
+                        while (self.current < len(self.source)) and self.look_ahead().isdigit():
+                            if self.current+1 >= len(self.source):
+                                break
+
+                            self.current += 1
+
+                        number = self.source[self.start:self.current+1]                        
+                        self.tokens.append(Token(TokenType.NUMBER, number))
+
                     # Default case, exit on encountering an undefined lexeme
-                    current = self.source[i]
-                    if not current.isalnum():
+                    elif not current.isalnum():
                         print(
                             f"[Line {self.line}] Unexpected token '{current}' encountered.")
                         exit(1)
+                
+            self.current += 1
 
         return self.tokens
 
     # Prints all token type and value
     def print_tokens(self):
+        """
+            Prints all of the tokens encountered thus far
+        """
         for token in self.tokens:
             print("type: {}\nvalue: {}\n".format(token.type, token.value))

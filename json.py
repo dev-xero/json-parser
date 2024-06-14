@@ -1,7 +1,7 @@
 from lexer import Lexer
 
 
-def read_file(path: str):
+def read_file(path: str) -> str:
     """
         Reads the contents of the file specified by the path.
         - path: string file path
@@ -16,7 +16,7 @@ def read_file(path: str):
         print("Failed to read json file.")
         exit(1)
 
-    return output
+    return output.strip()
 
 
 def main():

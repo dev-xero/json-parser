@@ -7,6 +7,7 @@ class TokenType(Enum):
     COLON = auto()
     COMMA = auto()
     STRING = auto()
+    NUMBER = auto()
 
 
 class Token:
