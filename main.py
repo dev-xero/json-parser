@@ -1,4 +1,5 @@
 from lexer import Lexer
+from parser import Parser
 
 
 def read_file(path: str) -> str:
@@ -37,9 +38,15 @@ def main():
 
     # Generates tokens from the source file
     lexer = Lexer(file)
+    tokens = lexer.scan()
 
-    lexer.scan()
-    lexer.print_tokens()
+    # Parse the tokens
+    parser = Parser(tokens)
+    parsed_obj = parser.parse()
+
+    print(parsed_obj)
+
+    # Testing: lexer.print_tokens()
 
 
 if __name__ == "__main__":
