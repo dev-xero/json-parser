@@ -40,15 +40,13 @@ def main():
     lexer = Lexer(file)
     tokens = lexer.scan()
 
-    lexer.print_tokens()
-
     # Parses tokens into a python dictionary
     parser = Parser(tokens)
-    parsed_obj = parser.parse()
+    parsed_dict = parser.parse()
 
-    print(parsed_obj.get("Object"))
-
-    # Testing: lexer.print_tokens()
+    # Testing (lexer): lexer.print_tokens()
+    # Testing (parser):
+    print(parsed_dict)
 
 
 if __name__ == "__main__":

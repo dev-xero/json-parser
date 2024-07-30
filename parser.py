@@ -16,15 +16,15 @@ class Parser:
     def parse(self) -> dict:
         return self.parse_object()
 
-    # Recursively parses objects
+    # Recursively parse objects
     def parse_object(self):
         self.expect(TokenType.LEFT_BRACE)
         members = self.parse_members()
         self.expect(TokenType.RIGHT_BRACE)
 
-        return {"Object": members}
+        return members
 
-    # Recursively parses members
+    # Recursively parse members
     def parse_members(self):
         members = {}
         if self.lookahead() != TokenType.RIGHT_BRACE:
@@ -38,21 +38,48 @@ class Parser:
 
         return members
 
-    # Recursively parses pairs
+    # Recursively parse pairs
     def parse_pair(self):
         # consume key
         key = self.expect(TokenType.STRING)
         self.expect(TokenType.COLON)
-        value = self.expect(TokenType.STRING)
+
+        # consume value
+        value = self.parse_value()
 
         return key, value
+
+    # Recursively parse values
+    def parse_value(self):
+        ttype = self.lookahead()
+
+        if ttype == TokenType.STRING:
+            return self.expect(TokenType.STRING)
+
+        elif ttype == TokenType.NUMBER:
+            return int(self.expect(TokenType.NUMBER))
+
+        elif ttype == TokenType.BOOLEAN:
+            boolean = self.expect(TokenType.BOOLEAN)
+            return True if boolean == 'true' else False
+
+        elif ttype == TokenType.LEFT_BRACE:
+            return self.parse_object()
+
+        elif ttype == TokenType.NULL:
+            self.expect(TokenType.NULL)
+            return None
+
+        else:
+            exitWithMsg(f"Unexpected token: {self.tokens[self.pos]}")
 
     # Helper function: expect a token
     def expect(self, token: Token):
         ttype, value = self.advance()
 
         if (ttype != token):
-            exitWithMsg(f"Expected token {token}, but got: {ttype}.")
+            exitWithMsg(
+                f"[pos: {self.pos}]: Expected token {token}, but got: {ttype}.")
 
         return value
 
