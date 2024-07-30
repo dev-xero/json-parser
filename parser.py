@@ -26,16 +26,42 @@ class Parser:
 
     # Recursively parses members
     def parse_members(self):
-        return ''
+        members = {}
+        if self.lookahead() != TokenType.RIGHT_BRACE:
+            k, v = self.parse_pair()
+            members.update({k: v})
+            while self.lookahead() == TokenType.COMMA:
+                # consume ,
+                self.advance()
+                k, v = self.parse_pair()
+                members.update({k: v})
+
+        return members
+
+    # Recursively parses pairs
+    def parse_pair(self):
+        # consume key
+        key = self.expect(TokenType.STRING)
+        self.expect(TokenType.COLON)
+        value = self.expect(TokenType.STRING)
+
+        return key, value
 
     # Helper function: expect a token
     def expect(self, token: Token):
         ttype, value = self.advance()
 
         if (ttype != token):
-            exitWithMsg("Expected token {token}, but got: {token_type}.")
+            exitWithMsg(f"Expected token {token}, but got: {ttype}.")
 
         return value
+
+    # Helper function: lookahead
+    def lookahead(self):
+        if self.pos < len(self.tokens):
+            return self.tokens[self.pos].type
+
+        return None
 
     # Helper function: advance pointer
     def advance(self):

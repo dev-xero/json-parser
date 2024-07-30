@@ -40,11 +40,13 @@ def main():
     lexer = Lexer(file)
     tokens = lexer.scan()
 
+    lexer.print_tokens()
+
     # Parses tokens into a python dictionary
     parser = Parser(tokens)
     parsed_obj = parser.parse()
 
-    print(parsed_obj)
+    print(parsed_obj.get("Object"))
 
     # Testing: lexer.print_tokens()
 
