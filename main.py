@@ -40,7 +40,7 @@ def main():
     lexer = Lexer(file)
     tokens = lexer.scan()
 
-    # Parse the tokens
+    # Parses tokens into a python dictionary
     parser = Parser(tokens)
     parsed_obj = parser.parse()
 
